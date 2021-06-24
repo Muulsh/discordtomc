@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DiscordBot {
     private GatewayDiscordClient gateway;
-    private boolean goBrr;
+    private boolean botconnected = true;
     private Discordtomc discordtomc;
     private final OkHttpClient httpClient = new OkHttpClient();
 
@@ -39,9 +39,7 @@ public class DiscordBot {
         gateway = client.login().block();
         if (gateway == null) {
             System.out.println("Unable to connect to discord, oh well");
-            goBrr = false;
-        } else {
-            goBrr = true;
+            botconnected = false;
         }
         gateway.getEventDispatcher().on(ReadyEvent.class)
             .subscribe(event -> {
@@ -83,14 +81,6 @@ public class DiscordBot {
                     channel.createMessage("webhook already exist").block();
                 }
 
-            } else if ("+getwebhooks".equals(msg)) {
-
-                TextChannel channelforwebhook = (TextChannel) channel;
-                List<Webhook> webhooks = channelforwebhook.getWebhooks().collectList().block();
-                for (Webhook webhook : webhooks) {
-                    System.out.println(webhook.getName().get()+" - "+webhook.getChannelId().asString());
-                    channel.createMessage(webhook.getName().get()+" - "+webhook.getChannelId().asString()).block();
-                }
             } else {
                 Member sender = message.getAuthorAsMember().block();
                 if (sender == null) {
@@ -123,12 +113,6 @@ public class DiscordBot {
                 return;
             }
         }
-        /*if (goBrr) {
-
-            String channelid = discordtomc.getConfig().getString("channelid");
-            TextChannel channel = gateway.getChannelById(Snowflake.of(channelid)).cast(TextChannel.class).block();
-            channel.createMessage(message).block();
-        }*/
     }
     public void sendMessage(String username, String message) {
         TextChannel channel = (TextChannel) gateway.getChannelById(Snowflake.of(discordtomc.getConfig().get("channelid").toString())).block();
@@ -146,15 +130,10 @@ public class DiscordBot {
 
     }
     public void exitDiscord() {
-        if (goBrr) {
+        if (botconnected) {
             gateway.logout();
         }
     }
-
-    public boolean logedIn() {
-        return this.goBrr;
-    }
-
     private void sendmsgwebhook(String webhookid, String webhooktoken, String username, String content, String avatar_url) {
 
         // form parameters
