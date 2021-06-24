@@ -1,0 +1,7 @@
+name: Discordtomc
+version: ${project.version}
+main: ga.shokokuki.discordtomc.Discordtomc
+api-version: 1.16
+prefix: DTM
+author: Muulsh
+website: https://github.com/Muulsh/discordtomc
