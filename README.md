@@ -1,6 +1,7 @@
 # discordtomc
 
 Simple plugin to display in-game messages in discord and discord messages in in-game tchat with discord roles colors
+1.16.4 or 1.16.5 idk i dont remember what i put but it works on 1.16.5
 
 ![discord](https://user-images.githubusercontent.com/37347830/123184700-7d74ff80-d494-11eb-8b01-aa58ba03305a.png)
 ![ingame](https://user-images.githubusercontent.com/37347830/123184710-82d24a00-d494-11eb-95cb-629e0a56bcd9.png)
