@@ -1,6 +1,7 @@
 package ga.shokokuki.discordtomc;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,33 +19,53 @@ public final class Discordtomc extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         Bukkit.getServer().getPluginManager().registerEvents(this, this);
 
-        String webhookUrl = this.getConfig().getString("webhookUrl");
         String discordToken = this.getConfig().getString("discordToken");
 
         discordBot = new DiscordBot(this);
         discordBot.Discord(discordToken);
-        discordBot.sendMessage("Server", "Server Started");
+        sendDiscordMessage("Server", "Server Started");
     }
     @Override
     public void onDisable() {
-        discordBot.sendMessage("Server", "Server Closed");
+        sendDiscordMessage("Server", "Server Closed");
         discordBot.exitDiscord();
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         String username = event.getPlayer().getName();
-        discordBot.sendMessage("Server", username+" joined the game");
+        sendDiscordMessage("Server", username+" joined the game");
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         String username = event.getPlayer().getName();
-        discordBot.sendMessage("Server", username+" left the game");
+        sendDiscordMessage("Server", username+" left the game");
     }
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         String msg = event.getMessage();
         Player sender = event.getPlayer();
         event.setMessage(msg);
-        discordBot.sendMessage(sender.getName(), msg, sender.getUniqueId().toString());
+
+        sendDiscordMessage(sender.getName(), msg, sender.getUniqueId().toString());
+
+    }
+    public void sendDiscordMessage(String username, String message) {
+        Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
+            @Override
+            public void run() {
+                discordBot.sendMessage(username, message);
+            }
+        });
+    }
+    public void sendDiscordMessage(String username, String message, String uuid) {
+        Bukkit.getScheduler().runTaskAsynchronously(this, new Runnable() {
+            @Override
+            public void run() {
+                discordBot.sendMessage(username, message, uuid);
+            }
+        });
+    }
+    public void sendMinecraftMessage(String message) {
+        Bukkit.getServer().broadcastMessage(message);
     }
 }

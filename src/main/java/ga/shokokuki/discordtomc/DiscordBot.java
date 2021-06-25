@@ -86,7 +86,14 @@ public class DiscordBot {
                     int rgbG = sender.getColor().block().getGreen();
                     int rgbB = sender.getColor().block().getBlue();
                     ChatColor color = ColorUtil.fromRGB(rgbR, rgbG, rgbB);
-                    Bukkit.getServer().broadcastMessage(ChatColor.BLUE+"[D] "+color+sendername+ChatColor.RESET+": "+msg);
+
+                    Bukkit.getScheduler().runTaskAsynchronously(discordtomc, new Runnable() {
+                        @Override
+                        public void run() {
+                            discordtomc.sendMinecraftMessage(ChatColor.BLUE+"[D] "+color+sendername+ChatColor.RESET+": "+msg);
+                        }
+                    });
+
                 }
             }
         });
